@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>صحيفة الأفق</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f4ee;
+    --paper: #fffdf8;
+    --ink: #1c1b19;
+    --muted: #6b665c;
+    --line: #ddd6c8;
+    --accent: #9c2b1f;
+    --accent-soft: #f3e3df;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161513;
+      --paper: #1f1e1b;
+      --ink: #ece8df;
+      --muted: #a39d90;
+      --line: #3a3732;
+      --accent: #e0705f;
+      --accent-soft: #3a2420;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Noto Naskh Arabic", "Amiri", serif;
+    line-height: 1.85;
+    font-size: 17px;
+  }
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: var(--accent); }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+
+  /* الشريط العلوي */
+  .topbar {
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .topbar .wrap { display: flex; justify-content: space-between; gap: 12px; padding-block: 8px; flex-wrap: wrap; }
+
+  /* الترويسة */
+  .masthead { text-align: center; padding: 28px 0 18px; border-bottom: 4px double var(--ink); }
+  .masthead h1 {
+    font-family: "Amiri", serif;
+    font-size: clamp(44px, 9vw, 84px);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+  .masthead p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+
+  /* القائمة */
+  nav { border-bottom: 1px solid var(--line); background: var(--paper); position: sticky; top: 0; z-index: 5; }
+  nav .wrap { display: flex; gap: 6px; overflow-x: auto; padding-block: 8px; scrollbar-width: none; }
+  nav button {
+    font: inherit; font-size: 16px; font-weight: 600;
+    background: none; border: 0; color: var(--ink);
+    padding: 6px 14px; border-radius: 999px; cursor: pointer; white-space: nowrap;
+  }
+  nav button:hover { color: var(--accent); }
+  nav button.active { background: var(--accent); color: #fff; }
+
+  /* شريط الأخبار العاجلة */
+  .ticker { display: flex; align-items: center; gap: 12px; margin: 18px 0; background: var(--paper); border: 1px solid var(--line); overflow: hidden; }
+  .ticker strong { background: var(--accent); color: #fff; padding: 8px 14px; white-space: nowrap; }
+  .ticker-track { overflow: hidden; flex: 1; }
+  .ticker-track span { display: inline-block; white-space: nowrap; animation: scroll 40s linear infinite; }
+  @keyframes scroll { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+  @media (prefers-reduced-motion: reduce) { .ticker-track span { animation: none; } }
+
+  /* التخطيط */
+  .layout { display: grid; grid-template-columns: 1fr 320px; gap: 32px; margin-bottom: 48px; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+  .tag { display: inline-block; font-size: 13px; font-weight: 700; color: var(--accent); background: var(--accent-soft); padding: 0 10px; border-radius: 4px; }
+  .meta { font-size: 14px; color: var(--muted); }
+
+  /* المقال الرئيسي */
+  .featured { background: var(--paper); border: 1px solid var(--line); margin-bottom: 28px; }
+  .featured .img { aspect-ratio: 16 / 7; background: linear-gradient(135deg, #2d4a5a, #9c2b1f); display: grid; place-items: center; color: #fff8; font-size: 64px; }
+  .featured .body { padding: 20px 24px 24px; }
+  .featured h2 { font-family: "Amiri", serif; font-size: clamp(26px, 4vw, 38px); line-height: 1.4; margin: 8px 0; }
+  .featured p { margin: 0 0 10px; }
+
+  /* شبكة المقالات */
+  .section-title { font-family: "Amiri", serif; font-size: 26px; border-bottom: 2px solid var(--ink); margin: 0 0 18px; padding-bottom: 4px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 22px; }
+  .card { background: var(--paper); border: 1px solid var(--line); display: flex; flex-direction: column; }
+  .card .img { aspect-ratio: 16 / 9; display: grid; place-items: center; font-size: 40px; color: #fff9; }
+  .card .body { padding: 14px 16px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .card h3 { font-size: 20px; line-height: 1.5; margin: 0; }
+  .card p { margin: 0; color: var(--muted); font-size: 15.5px; }
+  .card .meta { margin-top: auto; padding-top: 6px; }
+  .read-more { font: inherit; font-size: 14px; font-weight: 700; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-align: start; }
+  .full { display: none; color: var(--ink) !important; }
+  .card.open .full { display: block; }
+  .empty { color: var(--muted); }
+
+  /* الشريط الجانبي */
+  aside .box { background: var(--paper); border: 1px solid var(--line); padding: 18px; margin-bottom: 22px; }
+  aside h4 { font-family: "Amiri", serif; font-size: 22px; margin: 0 0 10px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+  .most-read { list-style: none; margin: 0; padding: 0; counter-reset: n; }
+  .most-read li { counter-increment: n; display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+  .most-read li:last-child { border-bottom: 0; }
+  .most-read li::before { content: counter(n, arabic-indic); font-family: "Amiri", serif; font-size: 30px; line-height: 1; color: var(--accent); min-width: 24px; }
+  .opinion { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+  .opinion:last-child { border-bottom: 0; }
+  .avatar { width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; color: #fff; font-weight: 700; }
+  .opinion b { display: block; font-size: 14px; color: var(--muted); }
+  .newsletter input { width: 100%; font: inherit; padding: 8px 12px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); margin: 6px 0 10px; }
+  .newsletter button { width: 100%; font: inherit; font-weight: 700; padding: 8px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+  .weather { display: flex; justify-content: space-between; text-align: center; }
+  .weather div { font-size: 14px; color: var(--muted); }
+  .weather span { display: block; font-size: 22px; color: var(--ink); font-weight: 700; }
+
+  footer { border-top: 4px double var(--ink); padding: 24px 0; text-align: center; color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span id="today"></span>
+    <span>العدد ١٢٤٧ — السنة الخامسة</span>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <h1>الأفق</h1>
+    <p>صحيفة يومية مستقلة — أخبار، ثقافة، رأي</p>
+  </div>
+</header>
+
+<nav>
+  <div class="wrap" id="nav">
+    <button class="active" data-cat="all">الرئيسية</button>
+    <button data-cat="سياسة">سياسة</button>
+    <button data-cat="اقتصاد">اقتصاد</button>
+    <button data-cat="ثقافة">ثقافة</button>
+    <button data-cat="رياضة">رياضة</button>
+    <button data-cat="علوم">علوم وتقنية</button>
+    <button data-cat="صحة">صحة</button>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="ticker" aria-label="أخبار عاجلة">
+    <strong>عاجل</strong>
+    <div class="ticker-track"><span>افتتاح المعرض الدولي للكتاب بمشاركة أكثر من ثلاثمائة دار نشر • ارتفاع ملحوظ في درجات الحرارة نهاية الأسبوع • المنتخب الوطني يستعد لمباراته الودية المقبلة • إطلاق منصة رقمية جديدة لدعم الشركات الناشئة</span></div>
+  </div>
+
+  <div class="layout">
+    <main>
+      <article class="featured">
+        <div class="img" aria-hidden="true">☀</div>
+        <div class="body">
+          <span class="tag">علوم وتقنية</span>
+          <h2>مشروع الطاقة الشمسية الأكبر في المنطقة يدخل مرحلة التشغيل التجريبي</h2>
+          <p>أعلنت الجهات المشرفة على مشروع محطة الطاقة الشمسية في الجنوب عن بدء التشغيل التجريبي للمرحلة الأولى، التي يُتوقع أن تغطي احتياجات أكثر من مائتي ألف منزل من الكهرباء النظيفة.</p>
+          <p>ويرى خبراء أن المشروع يمثل خطوة مهمة نحو تنويع مصادر الطاقة وخفض الانبعاثات، فيما أكد القائمون عليه أن المراحل اللاحقة ستشمل وحدات لتخزين الطاقة تتيح استمرار الإمداد خلال ساعات الليل.</p>
+          <span class="meta">بقلم: سلمى الهاشمي — منذ ساعتين</span>
+        </div>
+      </article>
+
+      <h2 class="section-title">آخر المنشورات</h2>
+      <div class="grid" id="grid"></div>
+      <p class="empty" id="empty" hidden>لا توجد منشورات في هذا القسم حالياً.</p>
+    </main>
+
+    <aside>
+      <div class="box">
+        <h4>الأكثر قراءة</h4>
+        <ol class="most-read">
+          <li><a href="#">كيف تغيّر المدن الذكية حياتنا اليومية؟</a></li>
+          <li><a href="#">عشر روايات عربية يجب أن تقرأها هذا العام</a></li>
+          <li><a href="#">نصائح غذائية لتعزيز المناعة في فصل الشتاء</a></li>
+          <li><a href="#">الأسواق تترقب قرارات البنك المركزي</a></li>
+          <li><a href="#">نادي المدينة يحسم صدارة الدوري</a></li>
+        </ol>
+      </div>
+
+      <div class="box">
+        <h4>مقالات الرأي</h4>
+        <div class="opinion">
+          <div class="avatar" style="background:#2d4a5a">ع</div>
+          <div><b>عمر الفاسي</b><a href="#">التعليم الرقمي: فرصة أم تحدٍّ جديد؟</a></div>
+        </div>
+        <div class="opinion">
+          <div class="avatar" style="background:#7a5c2e">ل</div>
+          <div><b>ليلى منصور</b><a href="#">عن القراءة في زمن الشاشات</a></div>
+        </div>
+        <div class="opinion">
+          <div class="avatar" style="background:#4b6b3a">ي</div>
+          <div><b>يوسف بن علي</b><a href="#">الماء… الثروة التي لا نراها</a></div>
+        </div>
+      </div>
+
+      <div class="box">
+        <h4>الطقس اليوم</h4>
+        <div class="weather">
+          <div>الرباط<span>٢٢°</span></div>
+          <div>القاهرة<span>٢٧°</span></div>
+          <div>تونس<span>٢٠°</span></div>
+          <div>عمّان<span>١٨°</span></div>
+        </div>
+      </div>
+
+      <div class="box newsletter">
+        <h4>النشرة البريدية</h4>
+        <p class="meta" style="margin:0">اشترك لتصلك أهم الأخبار كل صباح.</p>
+        <form onsubmit="event.preventDefault(); this.innerHTML='<p>شكراً لاشتراكك! ✓</p>';">
+          <input type="email" placeholder="بريدك الإلكتروني" required dir="ltr">
+          <button type="submit">اشترك الآن</button>
+        </form>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>© ٢٠٢٦ صحيفة الأفق — جميع الحقوق محفوظة</p>
+    <p>من نحن · اتصل بنا · سياسة الخصوصية · أعلن معنا</p>
+  </div>
+</footer>
+
+<script>
+  const posts = [
+    { cat: "سياسة", icon: "🏛", color: "#2d4a5a",
+      title: "البرلمان يناقش مشروع قانون جديد لتنظيم العمل عن بُعد",
+      summary: "يتضمن المشروع حقوقاً جديدة للموظفين وضوابط لساعات العمل والتواصل خارج الدوام.",
+      full: "وأوضح رئيس لجنة الشؤون الاجتماعية أن المشروع جاء استجابة للتحولات التي شهدها سوق العمل خلال السنوات الأخيرة، مشيراً إلى أن النقاش سيستمر عدة جلسات قبل التصويت النهائي.",
+      author: "كريم الدوري", time: "منذ ٣ ساعات" },
+    { cat: "اقتصاد", icon: "📈", color: "#4b6b3a",
+      title: "صادرات المنتجات الزراعية تسجل نمواً بنسبة ١٢٪",
+      summary: "تقرير رسمي يكشف عن ارتفاع الطلب على الخضر والفواكه في الأسواق الخارجية.",
+      full: "وعزا التقرير هذا النمو إلى تحسن سلاسل التبريد والنقل، إضافة إلى اعتماد تقنيات ري حديثة ساهمت في رفع جودة المنتجات وزيادة المردودية.",
+      author: "نادية برادة", time: "منذ ٤ ساعات" },
+    { cat: "ثقافة", icon: "📚", color: "#7a5c2e",
+      title: "معرض الكتاب يحتفي بالشعر العربي في دورته الجديدة",
+      summary: "أمسيات شعرية وندوات فكرية وتوقيعات لكتّاب من مختلف البلدان العربية.",
+      full: "ويخصص المعرض هذا العام جناحاً لأدب الطفل، إلى جانب ورشات للكتابة الإبداعية موجهة للشباب، في مسعى لتشجيع القراءة لدى الأجيال الجديدة.",
+      author: "هالة الصباغ", time: "منذ ٥ ساعات" },
+    { cat: "رياضة", icon: "⚽", color: "#9c2b1f",
+      title: "المنتخب الوطني يعلن قائمته استعداداً للتصفيات",
+      summary: "المدرب يستدعي ثلاثة لاعبين جدد ويؤكد على أهمية المباراتين المقبلتين.",
+      full: "وقال المدرب في المؤتمر الصحفي إن الفريق يعمل على تحسين الانسجام بين الخطوط، مؤكداً ثقته في قدرة اللاعبين على تحقيق نتائج إيجابية أمام الجماهير.",
+      author: "سامي العلوي", time: "منذ ٦ ساعات" },
+    { cat: "علوم", icon: "🔭", color: "#3b3f6b",
+      title: "فريق من الباحثين الشباب يطوّر تطبيقاً لرصد جودة الهواء",
+      summary: "التطبيق يعتمد على مستشعرات منخفضة التكلفة ويعرض النتائج على خريطة تفاعلية.",
+      full: "ويأمل الفريق أن يساعد التطبيق البلديات على اتخاذ قرارات أفضل بشأن حركة المرور والمساحات الخضراء، مع إتاحة البيانات للعموم بشكل مفتوح.",
+      author: "رانيا خليل", time: "منذ ٧ ساعات" },
+    { cat: "صحة", icon: "🩺", color: "#2e6b6b",
+      title: "حملة وطنية للتوعية بأهمية الفحص المبكر",
+      summary: "وحدات طبية متنقلة تجوب القرى لتقديم فحوصات مجانية للمواطنين.",
+      full: "وتستمر الحملة شهراً كاملاً، وتشمل فحوصات ضغط الدم والسكري، إلى جانب جلسات توعوية حول التغذية الصحية والنشاط البدني.",
+      author: "د. مريم القاسمي", time: "منذ ٨ ساعات" },
+    { cat: "اقتصاد", icon: "💼", color: "#5a4a2d",
+      title: "الشركات الناشئة تستقطب استثمارات قياسية هذا العام",
+      summary: "قطاعا التقنية المالية والتعليم الإلكتروني يتصدران قائمة القطاعات الأكثر جذباً.",
+      full: "ويرى محللون أن البيئة التشريعية الجديدة وبرامج المرافقة ساهمت في تشجيع رواد الأعمال الشباب على إطلاق مشاريعهم.",
+      author: "طارق المصري", time: "أمس" },
+    { cat: "ثقافة", icon: "🎭", color: "#6b2e4f",
+      title: "مهرجان المسرح يعود بعروض من عشر دول",
+      summary: "دورة استثنائية تحتفي بالمسرح التجريبي وتكرّم رواد الخشبة.",
+      full: "وتتضمن البرمجة عروضاً في الساحات العامة لتقريب الفن من الجمهور، إضافة إلى ندوات نقدية تناقش واقع المسرح العربي ومستقبله.",
+      author: "أمين الزهراني", time: "أمس" },
+    { cat: "رياضة", icon: "🏃", color: "#8a3a1f",
+      title: "آلاف العدّائين يشاركون في الماراثون الدولي للمدينة",
+      summary: "أجواء احتفالية ومشاركة واسعة للعائلات في سباق الخمسة كيلومترات.",
+      full: "وشهد السباق الرئيسي منافسة قوية حتى الأمتار الأخيرة، فيما خصص المنظمون جزءاً من العائدات لدعم الجمعيات الخيرية المحلية.",
+      author: "زينب الحسيني", time: "أمس" },
+  ];
+
+  const grid = document.getElementById("grid");
+  const empty = document.getElementById("empty");
+
+  function render(cat) {
+    const list = cat === "all" ? posts : posts.filter(p => p.cat === cat);
+    grid.innerHTML = list.map(p => `
+      <article class="card">
+        <div class="img" style="background:${p.color}" aria-hidden="true">${p.icon}</div>
+        <div class="body">
+          <span><span class="tag">${p.cat === "علوم" ? "علوم وتقنية" : p.cat}</span></span>
+          <h3>${p.title}</h3>
+          <p>${p.summary}</p>
+          <p class="full">${p.full}</p>
+          <button class="read-more" type="button">اقرأ المزيد ←</button>
+          <span class="meta">${p.author} — ${p.time}</span>
+        </div>
+      </article>`).join("");
+    empty.hidden = list.length > 0;
+  }
+
+  grid.addEventListener("click", e => {
+    const btn = e.target.closest(".read-more");
+    if (!btn) return;
+    const card = btn.closest(".card");
+    card.classList.toggle("open");
+    btn.textContent = card.classList.contains("open") ? "إخفاء ↑" : "اقرأ المزيد ←";
+  });
+
+  document.getElementById("nav").addEventListener("click", e => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    document.querySelectorAll("nav button").forEach(x => x.classList.toggle("active", x === b));
+    render(b.dataset.cat);
+  });
+
+  document.getElementById("today").textContent =
+    new Date().toLocaleDateString("ar-EG", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+
+  render("all");
+</script>
+</body>
+</html>
