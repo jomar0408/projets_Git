@@ -5,8 +5,8 @@
    Compatible: Oracle 11g et +
    ----------------------------------------------------------------------------
    HYPOTHÈSES (à adapter) :
-     CLIENT_HIST(client_id, statut, date_hist, ...)
-     CLIENT     (client_id, statut, date_maj, ...)
+     CLIENT_HIST(id_client, statut, date_hist, ...)
+     CLIENT     (id_client, nom, prenom, ville, categorie, statut, date_creation)
    -> On reporte dans CLIENT.statut le statut de la ligne d'historique
       la plus récente (date_hist max) de chaque client.
    ----------------------------------------------------------------------------
@@ -26,15 +26,15 @@ CREATE OR REPLACE PROCEDURE maj_client_depuis_hist (
 ) AS
     -- Dernière ligne d'historique par client
     CURSOR c_hist IS
-        SELECT client_id, statut
-          FROM (SELECT h.client_id,
+        SELECT id_client, statut
+          FROM (SELECT h.id_client,
                        h.statut,
-                       ROW_NUMBER() OVER (PARTITION BY h.client_id
+                       ROW_NUMBER() OVER (PARTITION BY h.id_client
                                           ORDER BY h.date_hist DESC) AS rn
                   FROM client_hist h)
          WHERE rn = 1;
 
-    TYPE t_id     IS TABLE OF client_hist.client_id%TYPE;
+    TYPE t_id     IS TABLE OF client_hist.id_client%TYPE;
     TYPE t_statut IS TABLE OF client_hist.statut%TYPE;
 
     l_ids      t_id;
@@ -67,9 +67,8 @@ BEGIN
             /* ---------- UPDATE mis en commentaire ----------
             FORALL i IN 1 .. l_ids.COUNT SAVE EXCEPTIONS
                 UPDATE client c
-                   SET c.statut   = l_statuts(i),
-                       c.date_maj = SYSDATE
-                 WHERE c.client_id = l_ids(i)
+                   SET c.statut   = l_statuts(i)
+                 WHERE c.id_client = l_ids(i)
                    -- ne met à jour que si la valeur change (NULL géré)
                    AND (c.statut <> l_statuts(i)
                         OR (c.statut IS NULL AND l_statuts(i) IS NOT NULL)
@@ -85,7 +84,7 @@ BEGIN
                 FOR j IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP
                     l_nb_err := l_nb_err + 1;
                     DBMS_OUTPUT.PUT_LINE(
-                        'Erreur client_id=' ||
+                        'Erreur id_client=' ||
                         l_ids(SQL%BULK_EXCEPTIONS(j).ERROR_INDEX) || ' : ' ||
                         SQLERRM(-SQL%BULK_EXCEPTIONS(j).ERROR_CODE));
                 END LOOP;
@@ -126,7 +125,7 @@ EXCEPTION
         END IF;
         ROLLBACK;
         DBMS_OUTPUT.PUT_LINE('Erreur fatale : ' || SQLERRM);
-        DBMS_OUTPUT.PUT_LINE('Durée avant erreur : ' || (SYSTIMESTAMP - l_debut));
+        DBMS_OUTPUT.PUT_LINE('Durée avant erreur : ' || TO_CHAR(SYSTIMESTAMP - l_debut));
         RAISE;
 END maj_client_depuis_hist;
 /
@@ -144,17 +143,16 @@ END;
    ---------------------------------------------------------------------------- */
 /*
 MERGE INTO client c
-USING (SELECT client_id, statut
-         FROM (SELECT h.client_id,
+USING (SELECT id_client, statut
+         FROM (SELECT h.id_client,
                       h.statut,
-                      ROW_NUMBER() OVER (PARTITION BY h.client_id
+                      ROW_NUMBER() OVER (PARTITION BY h.id_client
                                          ORDER BY h.date_hist DESC) AS rn
                  FROM client_hist h)
         WHERE rn = 1) h
-   ON (c.client_id = h.client_id)
+   ON (c.id_client = h.id_client)
  WHEN MATCHED THEN
-   UPDATE SET c.statut   = h.statut,
-              c.date_maj = SYSDATE
+   UPDATE SET c.statut   = h.statut
     WHERE DECODE(c.statut, h.statut, 0, 1) = 1;   -- seulement si différent
 
 COMMIT;
