@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion des utilisateurs</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Gestion des utilisateurs</h1>
+  </header>
+
+  <main>
+    <!-- Formulaire création / modification -->
+    <section class="carte">
+      <h2 id="titre-form">Nouvel utilisateur</h2>
+      <form id="form-utilisateur">
+        <input type="hidden" id="id_user">
+        <div class="grille">
+          <label>Nom *
+            <input type="text" id="nom" required>
+          </label>
+          <label>Prénom *
+            <input type="text" id="prenom" required>
+          </label>
+          <label>Email *
+            <input type="email" id="email" required>
+          </label>
+          <label>Téléphone
+            <input type="text" id="telephone">
+          </label>
+        </div>
+        <div class="actions">
+          <button type="submit" id="btn-enregistrer">Créer</button>
+          <button type="button" id="btn-annuler" class="secondaire" hidden>Annuler</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Recherche par id_user -->
+    <section class="carte">
+      <h2>Recherche par ID</h2>
+      <form id="form-recherche" class="ligne">
+        <input type="number" id="recherche-id" min="1" placeholder="id_user" required>
+        <button type="submit">Rechercher</button>
+        <button type="button" id="btn-tout" class="secondaire">Afficher tout</button>
+      </form>
+    </section>
+
+    <!-- Message -->
+    <div id="message" hidden></div>
+
+    <!-- Liste -->
+    <section class="carte">
+      <h2>Liste des utilisateurs</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Email</th>
+            <th>Téléphone</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="liste"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

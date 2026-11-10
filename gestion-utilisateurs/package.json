@@ -1,0 +1,14 @@
+{
+  "name": "gestion-utilisateurs",
+  "version": "1.0.0",
+  "description": "Application CRUD simple : HTML/CSS/JS + Node.js + MySQL",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "init-db": "node init-db.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "mysql2": "^3.11.5"
+  }
+}
