@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leçons Faciles — TDAH</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="barre-haut">
+    <button id="btn-accueil" class="logo" title="Accueil">📚 Leçons <span>Faciles</span></button>
+    <div class="haut-droite">
+      <span id="badge-ia" class="badge-ia" hidden>✨ IA</span>
+      <span class="etoiles" title="Étoiles gagnées">⭐ <strong id="total-etoiles">0</strong></span>
+      <button id="btn-reglages" class="icone" title="Réglages">⚙️</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== ACCUEIL ===== -->
+    <section id="ecran-accueil" class="ecran actif">
+      <div class="carte">
+        <h2>Ton niveau</h2>
+        <div id="choix-niveau" class="choix-niveau">
+          <button data-niveau="primaire">🎒 Primaire</button>
+          <button data-niveau="college">📘 Collège</button>
+          <button data-niveau="lycee">🎓 Lycée</button>
+          <button data-niveau="adulte">💼 Adulte</button>
+        </div>
+        <p id="info-niveau" class="astuce"></p>
+      </div>
+
+      <div class="titre-section">
+        <h2>Mes leçons</h2>
+        <button id="btn-nouvelle" class="btn principal">＋ Nouvelle leçon</button>
+      </div>
+      <ul id="liste-lecons" class="liste-lecons"></ul>
+    </section>
+
+    <!-- ===== ÉDITEUR ===== -->
+    <section id="ecran-editeur" class="ecran">
+      <div class="carte">
+        <h2 id="titre-editeur">Nouvelle leçon</h2>
+
+        <!-- Photo du texte -->
+        <div class="zone-photo">
+          <p class="zone-photo-titre">📷 Prendre la leçon en photo</p>
+          <div class="ligne">
+            <label class="btn principal bouton-fichier">📷 Photo ou image
+              <input id="input-photo" type="file" accept="image/*" capture="environment" hidden>
+            </label>
+            <button id="btn-webcam" class="btn">🎥 Webcam du PC</button>
+            <select id="type-ecriture" title="Le texte est-il imprimé ou écrit à la main ?">
+              <option value="imprime">🖨️ Texte imprimé</option>
+              <option value="manuscrit">✍️ Écrit à la main</option>
+            </select>
+            <select id="langue-photo" title="Langue du texte sur la photo">
+              <option value="fra">Texte en français</option>
+              <option value="ara">Texte en arabe</option>
+              <option value="eng">Texte en anglais</option>
+              <option value="fra+ara">Français + arabe</option>
+            </select>
+          </div>
+          <div id="photo-etat" class="photo-etat" hidden>
+            <img id="photo-apercu" alt="Aperçu de la photo">
+            <div>
+              <p id="photo-message">Lecture du texte…</p>
+              <div class="progression"><div id="photo-barre"></div></div>
+            </div>
+          </div>
+          <!-- Vérification du texte lu -->
+          <div id="photo-verif" class="photo-verif" hidden>
+            <p id="verif-qualite" class="qualite"></p>
+            <p id="verif-doutes" class="doutes" hidden></p>
+            <div class="verif-colonnes">
+              <img id="verif-image" alt="Photo de la leçon" title="Cliquer pour agrandir">
+              <textarea id="verif-texte" rows="12" spellcheck="true"></textarea>
+            </div>
+            <div class="ligne">
+              <button id="btn-verif-ajouter" class="btn principal">✔ Ajouter à la leçon</button>
+              <button id="btn-verif-tourner" class="btn" title="Si la photo est de travers ou à l'envers">↻ Tourner la photo et relire</button>
+              <button id="btn-verif-annuler" class="btn">✗ Annuler</button>
+            </div>
+          </div>
+          <p class="astuce">Tu peux aussi glisser une image ici ou la coller avec Ctrl+V. Le texte lu s'affiche pour être vérifié avant d'être ajouté. Plusieurs pages ? Prends-les une par une.</p>
+        </div>
+
+        <label>Titre
+          <input id="ed-titre" type="text" placeholder="Ex : Le cycle de l'eau">
+        </label>
+        <label>Matière
+          <select id="ed-matiere">
+            <option>Français</option><option>Mathématiques</option><option>Sciences</option>
+            <option>Histoire-Géographie</option><option>Anglais</option><option>Arabe</option>
+            <option>Éducation islamique</option><option>Physique-Chimie</option><option>SVT</option>
+            <option>Philosophie</option><option>Autre</option>
+          </select>
+        </label>
+        <label>Texte de la leçon
+          <textarea id="ed-texte" rows="10" placeholder="Colle, écris ou prends en photo la leçon…"></textarea>
+        </label>
+        <label>Mots importants <small>(facultatif, séparés par des virgules — sinon l'application les choisit)</small>
+          <input id="ed-mots" type="text" placeholder="Ex : évaporation, condensation, nuages">
+        </label>
+        <label>Mots difficiles à expliquer <small>(facultatif — un par ligne : mot = explication simple)</small>
+          <textarea id="ed-lexique" rows="3" placeholder="trachée = le tuyau qui amène l'air aux poumons"></textarea>
+        </label>
+        <label>Questions <small>(facultatif — une par ligne : question ? | réponse)</small>
+          <textarea id="ed-questions" rows="4" placeholder="Qu'est-ce que l'évaporation ? | L'eau devient de la vapeur avec la chaleur"></textarea>
+        </label>
+        <div class="ligne">
+          <button id="btn-enregistrer" class="btn principal">💾 Enregistrer</button>
+          <button id="btn-annuler" class="btn">Annuler</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CHARGEMENT ===== -->
+    <section id="ecran-chargement" class="ecran">
+      <div class="carte fin">
+        <div class="sablier">✨</div>
+        <h2>Je prépare ta leçon…</h2>
+        <p class="astuce">Je reformule le texte pour ton niveau et je dessine des schémas. Cela prend quelques secondes.</p>
+      </div>
+    </section>
+
+    <!-- ===== ÉTUDE ===== -->
+    <section id="ecran-etude" class="ecran">
+      <div class="etude-haut">
+        <h2 id="etude-titre"></h2>
+        <span id="etude-minuteur" class="minuteur" title="Temps avant la prochaine pause">⏱ 05:00</span>
+      </div>
+      <div class="progression"><div id="etude-barre"></div></div>
+      <p id="etude-compteur" class="compteur"></p>
+
+      <div id="etude-morceau" class="carte morceau"></div>
+      <div id="etude-original" class="original" hidden></div>
+      <div id="etude-lexique" class="lexique" hidden></div>
+
+      <div class="outils">
+        <button id="btn-ecouter" class="btn">🔊 Écouter</button>
+        <button id="btn-regle" class="btn" title="Lire phrase par phrase">📏 Phrase par phrase</button>
+        <button id="btn-original" class="btn" title="Voir le texte de la leçon tel qu'il est écrit">📄 Texte original</button>
+        <button id="btn-voir-schema" class="btn">📊 Schéma</button>
+      </div>
+      <p id="etude-source" class="astuce"></p>
+
+      <div class="ligne nav-etude">
+        <button id="btn-precedent" class="btn">◀ Retour</button>
+        <button id="btn-suivant" class="btn principal grand">✔ J'ai compris</button>
+      </div>
+    </section>
+
+    <!-- ===== SCHÉMAS ===== -->
+    <section id="ecran-schema" class="ecran">
+      <div class="etude-haut">
+        <h2>📊 La leçon en schéma</h2>
+      </div>
+      <div id="schemas-zone"></div>
+      <div class="ligne nav-etude">
+        <button id="btn-schema-retour" class="btn">◀ Retour à la leçon</button>
+        <button id="btn-schema-quiz" class="btn principal grand">🧠 Passer au quiz</button>
+      </div>
+    </section>
+
+    <!-- ===== QUIZ ===== -->
+    <section id="ecran-quiz" class="ecran">
+      <div class="etude-haut">
+        <h2>🧠 Petit quiz</h2>
+        <span id="quiz-score" class="minuteur"></span>
+      </div>
+      <div class="progression"><div id="quiz-barre"></div></div>
+      <div id="quiz-zone" class="carte morceau"></div>
+    </section>
+
+    <!-- ===== FIN ===== -->
+    <section id="ecran-fin" class="ecran">
+      <div class="carte fin">
+        <div class="grosse-icone">🏆</div>
+        <h2>Bravo !</h2>
+        <p id="fin-message"></p>
+        <p id="fin-etoiles" class="fin-etoiles"></p>
+        <div class="ligne centre">
+          <button id="btn-revoir" class="btn">↺ Revoir la leçon</button>
+          <button id="btn-fin-accueil" class="btn principal">🏠 Accueil</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== WEBCAM ===== -->
+  <div id="webcam" class="fenetre" hidden>
+    <div class="carte fenetre-contenu large">
+      <h2>🎥 Place la feuille devant la caméra</h2>
+      <video id="webcam-video" autoplay playsinline></video>
+      <div class="ligne centre">
+        <button id="btn-capturer" class="btn principal">📸 Prendre la photo</button>
+        <button id="btn-webcam-annuler" class="btn">Annuler</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAUSE ===== -->
+  <div id="pause" class="fenetre" hidden>
+    <div class="carte fenetre-contenu">
+      <div class="grosse-icone">🧘</div>
+      <h2>C'est l'heure d'une pause !</h2>
+      <p>Lève-toi, étire-toi, bois un verre d'eau.</p>
+      <p class="minuteur-pause" id="pause-temps">02:00</p>
+      <button id="btn-fin-pause" class="btn principal">Je suis prêt(e) à reprendre</button>
+    </div>
+  </div>
+
+  <!-- ===== RÉGLAGES ===== -->
+  <div id="reglages" class="fenetre" hidden>
+    <div class="carte fenetre-contenu">
+      <h2>⚙️ Réglages</h2>
+      <label class="case"><input type="checkbox" id="opt-police"> Police plus lisible (lettres espacées)</label>
+      <label class="case"><input type="checkbox" id="opt-grand"> Texte plus grand</label>
+      <label class="case"><input type="checkbox" id="opt-sombre"> Couleurs douces (mode sombre)</label>
+      <label class="case"><input type="checkbox" id="opt-son" checked> Son aux bonnes réponses</label>
+      <label>Vitesse de la voix
+        <input type="range" id="opt-vitesse" min="0.6" max="1.3" step="0.1" value="0.9">
+      </label>
+
+      <hr>
+      <h3>✍️ Écriture à la main (gratuit)</h3>
+      <p class="astuce">Pour lire l'écriture à la main, l'application envoie la photo au service gratuit OCR.space (Internet nécessaire).
+        Sans clé, une clé de démonstration très limitée est utilisée. Pour une clé personnelle gratuite (25 000 lectures par mois,
+        sans carte bancaire), inscris-toi avec ton e-mail sur <strong>ocr.space/ocrapi/freekey</strong> et colle la clé reçue ici.</p>
+      <label>Clé gratuite OCR.space
+        <input id="opt-cle-ocr" type="password" placeholder="K8…" autocomplete="off">
+      </label>
+
+      <hr>
+      <h3>✨ Intelligence artificielle (facultatif)</h3>
+      <p class="astuce">Avec une clé Claude, l'application reformule vraiment la leçon, dessine de meilleurs schémas et lit mieux les photos (même l'écriture à la main). Sans clé, elle utilise une version automatique plus simple.</p>
+      <label>Clé API Claude
+        <input id="opt-cle" type="password" placeholder="sk-ant-…" autocomplete="off">
+      </label>
+      <label>Modèle
+        <select id="opt-modele">
+          <option value="claude-haiku-5-5">Rapide et économique (Haiku)</option>
+          <option value="claude-sonnet-5-5">Meilleure qualité (Sonnet)</option>
+        </select>
+      </label>
+      <p class="astuce">La clé reste dans ce navigateur. Chaque leçon préparée coûte quelques centimes.</p>
+      <button id="btn-fermer-reglages" class="btn principal">Fermer</button>
+    </div>
+  </div>
+
+  <script src="lexique.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
